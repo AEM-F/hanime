@@ -1,6 +1,9 @@
 <h1>HAnime Web platform</h1>
 <p>The web application is designed to provide users with a platform to search for, browse, and discover information about various media content, such as TV shows, movies, and anime.</p>
 <br>
+<h2>Disclaimer</h2>
+<p>The following project is part of an ongoing Fontys ICT project, as such the current state of the project found on this platform is not complete.Due to confidentiality it does not contain the required properties to boot the application in a production enviorment. In the official repository the services use the custom build configuration service to feed the application.properties for each application profile/enviorment using a private github repository. I have modifed the original code of the server to fetch them using the predefined resources so that it can be run locally via an IDEA, or using docker-compose(recommended).
+<br>
 <h2>Goal</h2>
 <p>I'm going to use Spring Boot and related technologies to create an anime online application. I've used Spring Boot before and find it to be user-friendly, so I want to keep using it for this project. I also want to use more tools like Grafana, Prometheus, Spring Cloud, and Kubernetes. Although though some of these tools can be used in any project, I want to learn and use the Spring-based tools for this project. I also chose to use Kubernetes for this project because I want to have expertise in deploying applications on an industry level. I'll utilize Spring Sleuth, Zipkin and RabbitMQ for logging and monitoring in order to track down and identify issues with my microservices. I am excited about this project and look forward to implementing these technologies to create a scalable, reliable, and maintainable anime web application.
 
