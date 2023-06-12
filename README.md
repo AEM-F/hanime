@@ -1,2 +1,9 @@
-# hanime
-An anime streaming platform based on microservices
+<h1>HAnime Web platform</h1>
+<p>The web application is designed to provide users with a platform to search for, browse, and discover information about various media content, such as TV shows, movies, and anime.</p>
+<br>
+<h2>Goal</h2>
+<p>I'm going to use Spring Boot and related technologies to create an anime online application. I've used Spring Boot before and find it to be user-friendly, so I want to keep using it for this project. I also want to use more tools like Grafana, Prometheus, Spring Cloud, and Kubernetes. Although though some of these tools can be used in any project, I want to learn and use the Spring-based tools for this project. I also chose to use Kubernetes for this project because I want to have expertise in deploying applications on an industry level. I'll utilize Spring Sleuth, Zipkin and RabbitMQ for logging and monitoring in order to track down and identify issues with my microservices. I am excited about this project and look forward to implementing these technologies to create a scalable, reliable, and maintainable anime web application.
+
+This type of web application is required because anime has grown in popularity over the years, and many people enjoy watching anime shows and movies. With the rise of streaming services, there is an abundance of anime content available online, and users require a quick and easy way to find and watch their favorite anime shows. Furthermore, users frequently want to keep track of what they've watched and find new shows based on their preferences.
+
+Several anime websites rely heavily on pop-ups and adverts, which can be bothersome and ruin the user experience. Pop-ups and advertisements can also prolong the time it takes for a website to load and make it more difficult for consumers to use the service. Any successful anime online application must find the appropriate mix between marketing and user experience.</p>
