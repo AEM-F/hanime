@@ -1,0 +1,162 @@
+version: "3.8"
+services:
+
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+    depends_on:
+      - rabbitmq
+    networks:
+      - hemjy
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - hemjy
+
+  hanime-config-server:
+    image: hemjy/hanime-config-server-public:latest
+    ports:
+      - "8071:8071"
+    environment:
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
+    networks:
+      - hemjy
+    depends_on:
+      - zipkin
+      - rabbitmq
+
+  eurekaserver:
+    image: hemjy/eurekaserver
+    ports:
+      - "8761:8761"
+    networks:
+      - hemjy
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 15s
+        max_attempts: 3
+        window: 120s
+    depends_on:
+      - hanime-config-server
+    environment:
+      SPRING_CONFIG_IMPORT: configserver:http://hanime-config-server:8071/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
+      SPRING_PROFILES_ACTIVE: docker
+
+  db-discovery:
+    image: postgres:13
+    container_name: db-discovery
+    ports:
+      - "5432:5432"
+    restart: always
+    networks:
+      - hemjy
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: anime_discovery
+    volumes:
+      - postgresql:/var/lib/postgresql_discovery
+      - postgresql_data:/var/lib/postgresql_discovery/data
+
+  db-playback:
+    image: postgres:13
+    container_name: db-playback
+    ports:
+      - "5433:5433"
+    restart: always
+    networks:
+      - hemjy
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: anime_playback
+    volumes:
+      - postgresql:/var/lib/postgresql_playback
+      - postgresql_data:/var/lib/postgresql_playback/data
+
+  hanime-discovery:
+    image: hemjy/hanime-discovery:latest
+    container_name: hanime-discovery
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 40s
+        max_attempts: 3
+        window: 120s
+    networks:
+      - hemjy
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CONFIG_IMPORT: configserver:http://hanime-config-server:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
+    depends_on:
+      - db-discovery
+      - hanime-config-server
+      - eurekaserver
+
+  hanime-playback:
+    image: hemjy/hanime-playback:latest
+    container_name: hanime-playback
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 40s
+        max_attempts: 3
+        window: 120s
+    networks:
+      - hemjy
+    ports:
+      - "8089:8089"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CONFIG_IMPORT: configserver:http://hanime-config-server:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
+    depends_on:
+      - db-playback
+      - hanime-config-server
+      - eurekaserver
+
+  gatewayserver:
+    image: hemjy/gatewayserver:latest
+    ports:
+      - "8072:8072"
+    networks:
+      - hemjy
+    depends_on:
+      - hanime-config-server
+      - eurekaserver
+      - hanime-discovery
+      - hanime-playback
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 45s
+        max_attempts: 3
+        window: 180s
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CONFIG_IMPORT: configserver:http://hanime-config-server:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
+
+networks:
+  hemjy:
+
+volumes:
+  postgresql:
+  postgresql_data:

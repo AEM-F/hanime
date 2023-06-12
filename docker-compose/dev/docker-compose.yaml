@@ -1,0 +1,37 @@
+version: "3.8"
+services:
+
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+    depends_on:
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+
+  db-discovery:
+    image: postgres:13
+    container_name: db-discovery
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: anime_discovery
+    volumes:
+      - postgresql:/var/lib/postgresql_discovery
+      - postgresql_data:/var/lib/postgresql_discovery/data
+
+volumes:
+  postgresql:
+  postgresql_data:

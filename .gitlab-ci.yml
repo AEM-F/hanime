@@ -1,0 +1,143 @@
+stages:          # List of stages for jobs, and their order of execution
+  - build
+  - test
+  - QC
+  - docker_push
+
+#---------------------------------------BUILD------------------------------------------------
+# Build for discovery service
+build-discovery-service:       # This job runs in the build stage, which runs first.
+  stage: build
+  script:
+    - echo "Running Build"
+    - cd hanime-discovery
+    - mvn clean install -DskipTests -e
+    - docker build . -t hemjy/hanime-discovery
+    - echo "Build complete."
+
+# Build for eureka service
+build-eureka-service:       # This job runs in the build stage, which runs first.
+  stage: build
+  script:
+    - echo "Running Build..."
+    - cd eurekaserver
+    - mvn spring-boot:build-image
+    - echo "Builds complete."
+
+# Build for config service
+build-config-service:       # This job runs in the build stage, which runs first.
+  stage: build
+  script:
+    - echo "Running Build..."
+    - cd hanime-config-server
+    - mvn spring-boot:build-image
+    - echo "Builds complete."
+
+# Build for playback service
+build-playback-service:       # This job runs in the build stage, which runs first.
+  stage: build
+  script:
+    - echo "Running Builds..."
+    - cd hanime-playback
+    - mvn clean install -DskipTests -e
+    - echo "Finished service build, starting docker image build..."
+    - mvn spring-boot:build-image
+    - echo "Builds complete."
+
+# Build for gateway service
+build-gateway-service:       # This job runs in the build stage, which runs first.
+  stage: build
+  script:
+    - echo "Running Build..."
+    - cd gatewayserver
+    - mvn spring-boot:build-image
+    - echo "Builds complete."
+#---------------------------------------TEST------------------------------------------------
+# Test for discovery service
+unit-test-discovery-service:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo "Running unit tests..."
+    - cd hanime-discovery
+    - mvn test
+    - echo "Tests complete."
+
+# Test for playback service
+unit-test-playback-service:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo "Running unit tests..."
+    - cd hanime-playback
+    - mvn test
+    - echo "Tests complete."
+
+#---------------------------------------SONAR------------------------------------------------
+# Sonar for discovery service
+sonarqube-check-discovery-service:
+  stage: QC
+  script: 
+    - cd hanime-discovery
+    - mvn --batch-mode verify sonar:sonar -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_LOGIN -Dsonar.password=$SONAR_PASSWORD -Dsonar.projectKey=hanime-discovery -e
+  only:
+    - dev
+
+# Sonar for playback service
+sonarqube-check-playback-service:
+  stage: QC
+  script: 
+    - cd hanime-playback
+    - mvn --batch-mode verify sonar:sonar -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_LOGIN -Dsonar.password=$SONAR_PASSWORD -Dsonar.projectKey=hanime-playback -e
+  only:
+    - dev
+
+#---------------------------------------Docker------------------------------------------------
+# Docker push discovery
+docker-discovery-service:
+  stage: docker_push
+  script: 
+    - cd hanime-discovery
+    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+    - docker push hemjy/hanime-discovery
+  only:
+    - dev
+
+# Docker push playback
+docker-playback-service:
+  stage: docker_push
+  script: 
+    - cd hanime-playback
+    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+    - docker push hemjy/hanime-playback
+  only:
+    - dev
+
+# Docker push eureka
+docker-eureka-service:
+  stage: docker_push
+  script: 
+    - cd eurekaserver
+    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+    - docker push hemjy/eurekaserver
+  only:
+    - dev
+
+# Docker push config
+docker-config-service:
+  stage: docker_push
+  script: 
+    - cd hanime-config-server
+    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+    - docker push hemjy/hanime-config-server
+  only:
+    - dev
+
+# Docker push gateway
+docker-gateway-service:
+  stage: docker_push
+  script: 
+    - cd gatewayserver
+    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+    - docker push hemjy/gatewayserver
+  only:
+    - dev
+

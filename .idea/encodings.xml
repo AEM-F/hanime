@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/eurekaserver/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eurekaserver/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/gatawayserver/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/gatawayserver/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/gatewayserver/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/gatewayserver/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hanime-config-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hanime-content/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hanime-discovery/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hanime-discovery/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hanime-playback/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hanime-playback/src/main/resources" charset="UTF-8" />
+  </component>
+</project>

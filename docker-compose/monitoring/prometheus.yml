@@ -1,0 +1,12 @@
+global:
+  scrape_interval:     5s # Set the scrape interval to every 5 seconds.
+  evaluation_interval: 5s # Evaluate rules every 5 seconds.
+scrape_configs:
+  - job_name: 'discovery'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+    - targets: ['hanime-discovery:8081']
+  - job_name: 'playback'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+    - targets: ['hanime-playback:8089']

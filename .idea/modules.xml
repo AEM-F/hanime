@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/eurekaserver/eurekaserver.iml" filepath="$PROJECT_DIR$/eurekaserver/eurekaserver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gatewayserver/gatewayserver.iml" filepath="$PROJECT_DIR$/gatewayserver/gatewayserver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hanime-config-server/hanime-config-server.iml" filepath="$PROJECT_DIR$/hanime-config-server/hanime-config-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hanime-content/hanime-content.iml" filepath="$PROJECT_DIR$/hanime-content/hanime-content.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hanime-discovery/hanime-discovery.iml" filepath="$PROJECT_DIR$/hanime-discovery/hanime-discovery.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hanime-playback/hanime-playback.iml" filepath="$PROJECT_DIR$/hanime-playback/hanime-playback.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/hemjyanime.iml" filepath="$PROJECT_DIR$/.idea/hemjyanime.iml" />
+    </modules>
+  </component>
+</project>

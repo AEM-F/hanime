@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: playback-deployment
+  labels:
+    app: playback-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: playback-service
+  template:
+    metadata:
+      labels:
+        app: playback-service
+    spec:
+      containers:
+      - name: playback-service
+        image: hemjy/hanime-playback:latest
+        ports:
+        - containerPort: 8089
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          valueFrom: 
+            configMapKeyRef:
+              name: hemjy-configmap
+              key: SPRING_PROFILES_ACTIVE
+        - name: SPRING_ZIPKIN_BASEURL
+          valueFrom: 
+            configMapKeyRef:
+              name: hemjy-configmap
+              key: SPRING_ZIPKIN_BASEURL
+        - name: SPRING_CONFIG_IMPORT
+          valueFrom: 
+            configMapKeyRef:
+              name: hemjy-configmap
+              key: SPRING_CONFIG_IMPORT
+        - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+          valueFrom: 
+            configMapKeyRef:
+              name: hemjy-configmap
+              key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        - name: SPRING_RABBITMQ_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: hemjy-configmap
+                key: SPRING_RABBITMQ_HOST
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: playback-service
+spec:
+  selector:
+    app: playback-service
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8089
+      targetPort: 8089
